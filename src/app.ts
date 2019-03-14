@@ -17,6 +17,7 @@ class App {
         this.database();
         this.middleware();
         this.routes();
+        this.handleErrors();
     }
 
     private database() {
@@ -54,6 +55,20 @@ class App {
         this.app.all('*', (req: any, res: any) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
             res.sendStatus(404);
+        });
+    }
+
+    private handleErrors() {
+        this.app.use((err, req, res, next) => {
+            logger.error(err.stack);
+            if(res.headersSent) {
+                return next(err)
+            }
+            if (process.env.NODE_ENV === 'production') {
+                res.status(500).send(err.message);
+            } else {
+                res.status(500).send(err.stack);
+            }
         });
     }
 }
