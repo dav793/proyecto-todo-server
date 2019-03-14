@@ -16,6 +16,7 @@ class App {
         this.app = express();
         this.database();
         this.middleware();
+        this.authentication();
         this.routes();
         this.handleErrors();
     }
@@ -46,6 +47,10 @@ class App {
         this.app.use(morgan('dev', { stream: logger.stream }));
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
+    }
+
+    private authentication() {
+        
     }
 
     private routes() {
