@@ -1,0 +1,29 @@
+{
+  "name": "tsserver",
+  "version": "1.0.0",
+  "description": "simple nodejs and typescript server",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "serve": "tsc && export NODE_ENV=production && nodemon dist/index.js"
+  },
+  "author": "Andres Navarrete Boza",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.18.10",
+    "tslint": "^5.13.1",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "@types/express": "^4.16.1",
+    "@types/mongoose": "^5.3.20",
+    "@types/typescript": "^2.0.0",
+    "app-root-path": "^2.1.0",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.16",
+    "morgan": "^1.9.1",
+    "validator": "^10.11.0",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^3.8.0"
+  }
+}
