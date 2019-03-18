@@ -2,12 +2,14 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 
 import IndexRouter from './routes/index.router';
+import TodoRouter from './routes/todo.router';
 import UserRouter from './routes/user.router';
 
 const mongoose = require('mongoose');
 const env = require('../config/environment.template');
 const morgan = require('morgan');
 const logger = require('./winston');
+const passport = require('./passport');
 
 class App {
     public app: express.Application;
@@ -49,13 +51,22 @@ class App {
         this.app.use(bodyParser.urlencoded({ extended: false }));
     }
 
+    // User authentication
     private authentication() {
-        
+        require('./passport');
+        this.app.use(passport.initialize());
+
+        const expressJwt = require('express-jwt');
+        const authenticate = expressJwt({ secret: env.JWT_SECRET });
+
+        // protect api routes
+        this.app.use('/users', authenticate, (req, res, next) => { next(); });
     }
 
     private routes() {
         this.app.use('/', IndexRouter);
         this.app.use('/users', UserRouter);
+        this.app.use('/users/todo', TodoRouter);
 
         this.app.all('*', (req: any, res: any) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
@@ -66,8 +77,8 @@ class App {
     private handleErrors() {
         this.app.use((err, req, res, next) => {
             logger.error(err.stack);
-            if(res.headersSent) {
-                return next(err)
+            if (res.headersSent) {
+                return next(err);
             }
             if (process.env.NODE_ENV === 'production') {
                 res.status(500).send(err.message);

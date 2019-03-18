@@ -1,8 +1,6 @@
 import { Router } from 'express';
 import userController from '../controllers/user.controller';
 
-const logger = require('../winston');
-
 export class UserRouter {
     public router: Router;
 
@@ -12,6 +10,7 @@ export class UserRouter {
     }
 
     public init() {
+        this.router.post('/login', userController.login);
         this.router.post('/', userController.createUser);
         this.router.get('/', userController.getUsers);
         this.router.get('/:id', userController.getUserById);

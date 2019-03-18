@@ -45,7 +45,7 @@ export class Logger {
                     format: 'YYYY-MM-DD HH:mm:ss',
                 }),
                 format.printf(
-                    info => `${info.timestamp} ${info.level}: ${info.message}`,
+                    (info) => `${info.timestamp} ${info.level}: ${info.message}`,
                 ),
             ),
         });
@@ -56,10 +56,10 @@ export class Logger {
             datePattern: 'YYYY-MM-DD',
             format: format.combine(
                 format.timestamp({
-                    format: 'YYYY-MM-DD HH:mm:ss'
+                    format: 'YYYY-MM-DD HH:mm:ss',
                 }),
                 format.printf(
-                    info => `${info.timestamp}: ${info.message}`,
+                    (info) => `${info.timestamp}: ${info.message}`,
                 ),
             ),
             handleExceptions: true,

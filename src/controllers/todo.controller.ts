@@ -1,0 +1,49 @@
+const Todo = require('../models/todo.model');
+
+export class TodoController {
+    public logger = require('../winston');
+
+    // -------------------- CREATE --------------------
+    public createTodo = async (req, res) => {
+        const todo = new Todo({
+            body: req.body.body,
+            done: req.body.done,
+            userId: req.body.userId,
+        });
+        await Todo.save();
+        res.json({
+            status: 'Todo saved!!',
+        });
+    }
+
+    // -------------------- READ --------------------
+    public getTodos = async (req, res) => {
+        const todos = await Todo.find();
+        res.json(todos);
+    }
+
+    public getTodoById = async (req, res) => {
+        const todo = await Todo.findById(req.params.id);
+        res.json(todo);
+    }
+
+    // -------------------- UPDATE --------------------
+    public updateTodo = async (req, res) => {
+        const { id } = req.params;
+        const todo = {
+            body: req.body.body,
+            done: req.body.done,
+            userId: req.body.userId,
+        };
+        await Todo.findByIdAndUpdate(id, { $set: todo }, { new: true });
+        res.json({ status: 'Todo updated' });
+    }
+
+    // -------------------- DELETE --------------------
+    public deleteTodo = async (req, res) => {
+        await Todo.findByIdAndRemove(req.params.id);
+        res.json({ status: 'Todo deleted' });
+    }
+}
+
+export default new TodoController();

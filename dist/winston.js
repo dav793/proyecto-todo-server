@@ -21,15 +21,15 @@ class Logger {
             level: 'debug',
             format: format.combine(format.colorize(), format.timestamp({
                 format: 'YYYY-MM-DD HH:mm:ss',
-            }), format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)),
+            }), format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)),
         });
         this.errorFileTransport = new transports.DailyRotateFile({
             level: 'error',
             filename: `${logDir}/%DATE%-error.log`,
             datePattern: 'YYYY-MM-DD',
             format: format.combine(format.timestamp({
-                format: 'YYYY-MM-DD HH:mm:ss'
-            }), format.printf(info => `${info.timestamp}: ${info.message}`)),
+                format: 'YYYY-MM-DD HH:mm:ss',
+            }), format.printf((info) => `${info.timestamp}: ${info.message}`)),
             handleExceptions: true,
         });
         this.combinedFileTransport = new transports.File({

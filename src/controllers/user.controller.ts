@@ -1,6 +1,6 @@
-const User = require('../models/user.model');
+import * as passport from 'passport';
 
-// const logger = require('../winston');
+const User = require('../models/user.model');
 
 export class UserController {
     public logger = require('../winston');
@@ -47,6 +47,26 @@ export class UserController {
     public deleteUser = async (req, res) => {
         await User.findByIdAndRemove(req.params.id);
         res.json({ status: 'Employee deleted' });
+    }
+
+    // -------------------- LOGIN --------------------
+    public login = async (req, res) => {
+        passport.authenticate('local', (err, user, info) => {
+            if (err) {
+                res.status(404).json(err);
+            } else {
+                if (user) { // The user was found
+                    if (user.deleted) {
+                        res.status(404).json(err);
+                    } else {
+                        res.status(200).json({token: user.generateJwt()});
+                    }
+                } else {
+                    // user is not found
+                    res.status(401).json(info);
+                }
+            }
+        });
     }
 }
 

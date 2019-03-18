@@ -3,17 +3,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bodyParser = require("body-parser");
 const express = require("express");
 const index_router_1 = require("./routes/index.router");
+const todo_router_1 = require("./routes/todo.router");
 const user_router_1 = require("./routes/user.router");
 const mongoose = require('mongoose');
 const env = require('../config/environment.template');
 const morgan = require('morgan');
 const logger = require('./winston');
+const passport = require('passport');
 class App {
     constructor() {
         this.app = express();
         this.database();
         this.middleware();
+        this.authentication();
         this.routes();
+        this.handleErrors();
     }
     database() {
         if (process.env.NODE_ENV === 'test') {
@@ -42,12 +46,31 @@ class App {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
     }
+    authentication() {
+        this.app.use(passport.initialize());
+        this.app.use(passport.session());
+    }
     routes() {
         this.app.use('/', index_router_1.default);
         this.app.use('/users', user_router_1.default);
+        this.app.use('/users/todo', todo_router_1.default);
         this.app.all('*', (req, res) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
             res.sendStatus(404);
+        });
+    }
+    handleErrors() {
+        this.app.use((err, req, res, next) => {
+            logger.error(err.stack);
+            if (res.headersSent) {
+                return next(err);
+            }
+            if (process.env.NODE_ENV === 'production') {
+                res.status(500).send(err.message);
+            }
+            else {
+                res.status(500).send(err.stack);
+            }
         });
     }
 }
