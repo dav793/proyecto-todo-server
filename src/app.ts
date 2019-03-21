@@ -34,7 +34,6 @@ class App {
                 url = `mongodb://${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`;
             }
             mongoose.connect(url, { useNewUrlParser: true, useFindAndModify: false });
-            // console.log('url ---> ' + url);
             const db = mongoose.connection;
             db.on('error', () => {
                 console.error.bind(console, 'connection error:');

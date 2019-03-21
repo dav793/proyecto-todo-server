@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const env = require('../config/environment.template');
 const morgan = require('morgan');
 const logger = require('./winston');
-const passport = require('passport');
+const passport = require('./passport');
 class App {
     constructor() {
         this.app = express();
@@ -47,8 +47,11 @@ class App {
         this.app.use(bodyParser.urlencoded({ extended: false }));
     }
     authentication() {
+        require('./passport');
         this.app.use(passport.initialize());
-        this.app.use(passport.session());
+        const expressJwt = require('express-jwt');
+        const authenticate = expressJwt({ secret: env.JWT_SECRET });
+        this.app.use('/users', authenticate, (req, res, next) => { next(); });
     }
     routes() {
         this.app.use('/', index_router_1.default);

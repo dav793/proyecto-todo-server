@@ -3,5 +3,20 @@ export interface IUser {
     lastName?: string;
     username: string;
     email: string;
-    updatePassword?: Boolean;
+    updatePassword?: boolean;
+}
+
+export interface IUserUpdateBody {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    updatePassword?: boolean;
+}
+
+export interface IUserRegisterBody {
+    username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
 }

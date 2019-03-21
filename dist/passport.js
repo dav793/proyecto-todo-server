@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('./models/user.model');
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
 passport.use(new LocalStrategy({
     usernameField: 'username',
 }, (username, password, done) => {
@@ -9,23 +9,17 @@ passport.use(new LocalStrategy({
         if (err) {
             return done(err);
         }
-        else {
-            if (!user) {
-                return done(null, false, {
-                    message: 'User not found',
-                });
-            }
-            else {
-                if (!user.validPassword(password)) {
-                    return done(null, false, {
-                        message: 'Password is wrong',
-                    });
-                }
-                else {
-                    return done(null, user);
-                }
-            }
+        if (!user) {
+            return done(null, false, {
+                message: 'User not found',
+            });
         }
+        if (!user.validPassword(password)) {
+            return done(null, false, {
+                message: 'Password is wrong',
+            });
+        }
+        return done(null, user);
     });
 }));
 //# sourceMappingURL=passport.js.map

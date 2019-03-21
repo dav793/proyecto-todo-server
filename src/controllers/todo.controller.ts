@@ -1,4 +1,4 @@
-const Todo = require('../models/todo.model');
+import { Todo } from '../models/todo.model';
 
 export class TodoController {
     public logger = require('../winston');
@@ -10,16 +10,16 @@ export class TodoController {
             done: req.body.done,
             userId: req.body.userId,
         });
-        await Todo.save();
+        await todo.save();
         res.json({
             status: 'Todo saved!!',
         });
     }
 
     // -------------------- READ --------------------
-    public getTodos = async (req, res) => {
-        const todos = await Todo.find();
-        res.json(todos);
+    public getAllTodo = async (req, res) => {
+        const allTodo = await Todo.find();
+        res.json(allTodo);
     }
 
     public getTodoById = async (req, res) => {

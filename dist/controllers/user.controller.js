@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const passport = require("passport");
 const User = require('../models/user.model');
 class UserController {
     constructor() {
@@ -46,6 +47,29 @@ class UserController {
         this.deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             yield User.findByIdAndRemove(req.params.id);
             res.json({ status: 'Employee deleted' });
+        });
+        this.login = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            passport.authenticate('local', (err, user, info) => {
+                if (err) {
+                    res.status(404).json(err);
+                }
+                else {
+                    if (user) {
+                        if (user.deleted) {
+                            res.status(404).json(err);
+                        }
+                        else {
+                            res.status(200).json({ token: user.generateJwt() });
+                        }
+                    }
+                    else {
+                        res.status(401).json(info);
+                    }
+                }
+            });
+        });
+        this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const userData = req.body;
         });
     }
 }

@@ -1,11 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const mongoose_1 = require("mongoose");
 const cryptoPass = require('crypto');
 const jwt = require('jsonwebtoken');
 const env = require('../../config/environment');
-exports.UserSchema = new Schema({
+exports.UserSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
         default: '',
@@ -54,6 +53,5 @@ exports.UserSchema.methods.generateJwt = () => {
         exp: expiry.getTime() / 1000,
     }, env.JWT_SECRET);
 };
-exports.UserSchema.methods.
-    module.exports = mongoose.model('User', exports.UserSchema);
+exports.User = mongoose_1.model('User', exports.UserSchema);
 //# sourceMappingURL=user.model.js.map

@@ -1,4 +1,6 @@
 import * as passport from 'passport';
+import { IUserUpdateBody } from '../interfaces/user.interface';
+import { IUserRegisterBody } from '../interfaces/user.interface';
 
 const User = require('../models/user.model');
 
@@ -59,7 +61,7 @@ export class UserController {
                     if (user.deleted) {
                         res.status(404).json(err);
                     } else {
-                        res.status(200).json({token: user.generateJwt()});
+                        res.status(200).json({ token: user.generateJwt() });
                     }
                 } else {
                     // user is not found
@@ -67,6 +69,11 @@ export class UserController {
                 }
             }
         });
+    }
+
+    // ------------------- REGISTER ------------------
+    public register = async (req, res) => {
+        const userData: IUserRegisterBody = req.body;
     }
 }
 

@@ -7,7 +7,7 @@
     "build": "tsc",
     "serve": "tsc && export NODE_ENV=production && nodemon dist/index.js"
   },
-  "author": "Andres Navarrete Boza",
+  "author": "",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^1.18.10",

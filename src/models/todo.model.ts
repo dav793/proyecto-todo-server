@@ -1,31 +1,26 @@
+import { Document, Model, model, Schema, Types} from 'mongoose';
 import { ITodo } from '../interfaces/todo.interface';
-import { Types } from "mongoose";
 
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
-
-const env = require('../../config/environment');
-
-export interface ITodoModel extends Document {
+export interface ITodoModel extends ITodo, Document {
     _id: Types.ObjectId;
 }
 
 export let TodoSchema = new Schema({
     body: {
         type: String,
-        required: true
+        required: true,
     },
     done: {
         type: Boolean,
-        default: false
+        default: false,
     },
     userId: {
         type: Number,
-        required: true
-    }
+        required: true,
+    },
 }, {
-        timestamps: true
-    }
+        timestamps: true,
+    },
 );
 
-module.exports = mongoose.model('Todo', TodoSchema);
+export const Todo: Model<ITodoModel> = model<ITodoModel>('Todo', TodoSchema);

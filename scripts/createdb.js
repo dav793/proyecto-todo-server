@@ -1,6 +1,7 @@
 use sandbox;
 
 db.createCollection("users");
+db.createCollection("todos");
 
 db.createUser({
     user: "sandbox",

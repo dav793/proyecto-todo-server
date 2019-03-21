@@ -9,7 +9,7 @@ class TodoRouter {
     }
     init() {
         this.router.post('/', todo_controller_1.default.createTodo);
-        this.router.get('/', todo_controller_1.default.getTodos);
+        this.router.get('/', todo_controller_1.default.getAllTodo);
         this.router.get('/:id', todo_controller_1.default.getTodoById);
         this.router.put('/:id', todo_controller_1.default.updateTodo);
         this.router.delete('/:id', todo_controller_1.default.deleteTodo);
