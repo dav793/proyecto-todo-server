@@ -1,16 +1,11 @@
-import { Document, Model, model, Schema, Types} from 'mongoose';
-import { IUser } from '../interfaces/user.interface';
+import { env } from '../../config/environment';
 
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 const cryptoPass = require('crypto');
 const jwt = require('jsonwebtoken');
 
-const env = require('../../config/environment');
-
-export interface IUserModel extends IUser, Document {
-    _id: Types.ObjectId;
-}
-
-export let UserSchema = new Schema({
+const UserSchema = new Schema({
     firstName: {
         type: String,
         default: '',
@@ -65,4 +60,4 @@ UserSchema.methods.generateJwt = () => {
     }, env.JWT_SECRET);
 };
 
-export const User: Model<IUserModel> = model<IUserModel>('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

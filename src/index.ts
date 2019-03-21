@@ -2,8 +2,13 @@ import * as http from 'http';
 
 import App from './app';
 
+process.on('uncaughtException', (err) => {
+    console.log(err);
+});
+
 function normalizePort(val: number | string): number | string | boolean {
-    let port: number = (typeof val === 'string') ? parseInt(val, 10) : val;
+    // tslint:disable-next-line:no-shadowed-variable
+    const port: number = (typeof val === 'string') ? parseInt(val, 10) : val;
     if (isNaN(port)) {
         return val;
     } else {
@@ -42,7 +47,7 @@ function onListening(): void {
     console.log(`Server is listening on ${bind}`);
 }
 
-const env = require('../config/environment.template');
+const env = require('../config/environment');
 const port = normalizePort(env.PORT || 8080);
 
 App.set('port', port);

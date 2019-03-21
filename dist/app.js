@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const bodyParser = require("body-parser");
 const express = require("express");
+const mongoose = require("mongoose");
+const morgan = require("morgan");
+const passport = require("passport");
 const index_router_1 = require("./routes/index.router");
 const todo_router_1 = require("./routes/todo.router");
 const user_router_1 = require("./routes/user.router");
-const mongoose = require('mongoose');
-const env = require('../config/environment.template');
-const morgan = require('morgan');
+const env = require('../config/environment');
 const logger = require('./winston');
-const passport = require('./passport');
 class App {
     constructor() {
         this.app = express();
@@ -50,13 +50,19 @@ class App {
         require('./passport');
         this.app.use(passport.initialize());
         const expressJwt = require('express-jwt');
-        const authenticate = expressJwt({ secret: env.JWT_SECRET });
+        let authenticate;
+        try {
+            authenticate = expressJwt({ secret: env.JWT_SECRET });
+        }
+        catch (err) {
+            console.log(err);
+        }
         this.app.use('/users', authenticate, (req, res, next) => { next(); });
     }
     routes() {
         this.app.use('/', index_router_1.default);
         this.app.use('/users', user_router_1.default);
-        this.app.use('/users/todo', todo_router_1.default);
+        this.app.use('/todo', todo_router_1.default);
         this.app.all('*', (req, res) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
             res.sendStatus(404);

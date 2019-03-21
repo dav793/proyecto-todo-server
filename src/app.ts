@@ -1,15 +1,16 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
+import * as mongoose from 'mongoose';
+import * as morgan from 'morgan';
+import * as passport from 'passport';
 
+// Route Section
 import IndexRouter from './routes/index.router';
 import TodoRouter from './routes/todo.router';
 import UserRouter from './routes/user.router';
 
-const mongoose = require('mongoose');
-const env = require('../config/environment.template');
-const morgan = require('morgan');
+const env = require('../config/environment');
 const logger = require('./winston');
-const passport = require('./passport');
 
 class App {
     public app: express.Application;
@@ -54,10 +55,13 @@ class App {
     private authentication() {
         require('./passport');
         this.app.use(passport.initialize());
-
         const expressJwt = require('express-jwt');
-        const authenticate = expressJwt({ secret: env.JWT_SECRET });
-
+        let authenticate: any;
+        try {
+            authenticate = expressJwt({ secret: env.JWT_SECRET });
+        } catch (err) {
+            console.log(err);
+        }
         // protect api routes
         this.app.use('/users', authenticate, (req, res, next) => { next(); });
     }
@@ -65,7 +69,7 @@ class App {
     private routes() {
         this.app.use('/', IndexRouter);
         this.app.use('/users', UserRouter);
-        this.app.use('/users/todo', TodoRouter);
+        this.app.use('/todo', TodoRouter);
 
         this.app.all('*', (req: any, res: any) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);

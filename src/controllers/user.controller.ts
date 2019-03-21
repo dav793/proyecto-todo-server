@@ -1,4 +1,3 @@
-import * as passport from 'passport';
 import { IUserUpdateBody } from '../interfaces/user.interface';
 import { IUserRegisterBody } from '../interfaces/user.interface';
 
@@ -10,12 +9,13 @@ export class UserController {
     // -------------------- CREATE --------------------
     public createUser = async (req, res) => {
         const user = new User({
-            age: req.body.age,
-            birthday: req.body.birthday,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
+            username: req.body.username,
+            email: req.body.email,
+            updatePassword: req.body.updatePassword,
         });
-        await user.save();
+        await User.save();
         res.json({
             status: 'Employee saved!!',
         });
@@ -36,10 +36,11 @@ export class UserController {
     public updateUser = async (req, res) => {
         const { id } = req.params;
         const user = {
-            age: req.body.age,
-            birthday: req.body.birthday,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
+            username: req.body.username,
+            email: req.body.email,
+            updatePassword: req.body.updatePassword,
         };
         await User.findByIdAndUpdate(id, { $set: user }, { new: true });
         res.json({ status: 'Employee updated' });
@@ -51,29 +52,28 @@ export class UserController {
         res.json({ status: 'Employee deleted' });
     }
 
-    // -------------------- LOGIN --------------------
-    public login = async (req, res) => {
-        passport.authenticate('local', (err, user, info) => {
-            if (err) {
-                res.status(404).json(err);
-            } else {
-                if (user) { // The user was found
-                    if (user.deleted) {
-                        res.status(404).json(err);
-                    } else {
-                        res.status(200).json({ token: user.generateJwt() });
-                    }
-                } else {
-                    // user is not found
-                    res.status(401).json(info);
-                }
-            }
-        });
-    }
-
     // ------------------- REGISTER ------------------
     public register = async (req, res) => {
         const userData: IUserRegisterBody = req.body;
+        const user = new User({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            username: req.body.username,
+            email: req.body.email,
+            updatePassword: true,
+        });
+        if (userData.password) {
+            user.setPassword(userData.password);
+            user.save((err) => {
+                if (err) {
+                    res.status(404).json(err);
+                } else {
+                    res.status(200).json({ token: user.generateJwt() });
+                }
+            });
+        } else {
+            res.json({ status: 'must set a password' });
+        }
     }
 }
 

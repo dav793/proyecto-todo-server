@@ -1,4 +1,4 @@
-import { Todo } from '../models/todo.model';
+const Todo = require('../models/todo.model');
 
 export class TodoController {
     public logger = require('../winston');
@@ -10,7 +10,7 @@ export class TodoController {
             done: req.body.done,
             userId: req.body.userId,
         });
-        await todo.save();
+        await Todo.save();
         res.json({
             status: 'Todo saved!!',
         });

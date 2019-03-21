@@ -2,8 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const http = require("http");
 const app_1 = require("./app");
+process.on('uncaughtException', (err) => {
+    console.log(err);
+});
 function normalizePort(val) {
-    let port = (typeof val === 'string') ? parseInt(val, 10) : val;
+    const port = (typeof val === 'string') ? parseInt(val, 10) : val;
     if (isNaN(port)) {
         return val;
     }
@@ -41,7 +44,7 @@ function onListening() {
         : 'port ' + addr.port;
     console.log(`Server is listening on ${bind}`);
 }
-const env = require('../config/environment.template');
+const env = require('../config/environment');
 const port = normalizePort(env.PORT || 8080);
 app_1.default.set('port', port);
 let httpServer;

@@ -5,7 +5,7 @@ export interface ITodoModel extends ITodo, Document {
     _id: Types.ObjectId;
 }
 
-export let TodoSchema = new Schema({
+export let TodoSchema: Schema = new Schema({
     body: {
         type: String,
         required: true,

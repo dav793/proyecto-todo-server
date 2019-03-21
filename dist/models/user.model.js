@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = require("mongoose");
+const environment_1 = require("../../config/environment");
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 const cryptoPass = require('crypto');
 const jwt = require('jsonwebtoken');
-const env = require('../../config/environment');
-exports.UserSchema = new mongoose_1.Schema({
+const UserSchema = new Schema({
     firstName: {
         type: String,
         default: '',
@@ -35,15 +36,15 @@ exports.UserSchema = new mongoose_1.Schema({
 }, {
     timestamps: true,
 });
-exports.UserSchema.methods.setPassword = (password) => {
+UserSchema.methods.setPassword = (password) => {
     this.salt = cryptoPass.randomBytes(16).toString('hex');
     this.hash = cryptoPass.pbkdf2Sync(password, this.salt, 1000, 64, 'sha1').toString('hex');
 };
-exports.UserSchema.methods.validPassword = (password) => {
+UserSchema.methods.validPassword = (password) => {
     const hash = cryptoPass.pbkdf2Sync(password, this.salt, 1000, 64, 'sha1').toString('hex');
     return this.hash === hash;
 };
-exports.UserSchema.methods.generateJwt = () => {
+UserSchema.methods.generateJwt = () => {
     const expiry = new Date();
     expiry.setDate(expiry.getDate() + 7);
     return jwt.sign({
@@ -51,7 +52,7 @@ exports.UserSchema.methods.generateJwt = () => {
         email: this.email,
         username: this.username,
         exp: expiry.getTime() / 1000,
-    }, env.JWT_SECRET);
+    }, environment_1.env.JWT_SECRET);
 };
-exports.User = mongoose_1.model('User', exports.UserSchema);
+module.exports = mongoose.model('User', UserSchema);
 //# sourceMappingURL=user.model.js.map

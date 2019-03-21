@@ -8,19 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const passport = require("passport");
 const User = require('../models/user.model');
 class UserController {
     constructor() {
         this.logger = require('../winston');
         this.createUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const user = new User({
-                age: req.body.age,
-                birthday: req.body.birthday,
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
+                username: req.body.username,
+                email: req.body.email,
+                updatePassword: req.body.updatePassword,
             });
-            yield user.save();
+            yield User.save();
             res.json({
                 status: 'Employee saved!!',
             });
@@ -36,10 +36,11 @@ class UserController {
         this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             const user = {
-                age: req.body.age,
-                birthday: req.body.birthday,
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
+                username: req.body.username,
+                email: req.body.email,
+                updatePassword: req.body.updatePassword,
             };
             yield User.findByIdAndUpdate(id, { $set: user }, { new: true });
             res.json({ status: 'Employee updated' });
@@ -48,28 +49,29 @@ class UserController {
             yield User.findByIdAndRemove(req.params.id);
             res.json({ status: 'Employee deleted' });
         });
-        this.login = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            passport.authenticate('local', (err, user, info) => {
-                if (err) {
-                    res.status(404).json(err);
-                }
-                else {
-                    if (user) {
-                        if (user.deleted) {
-                            res.status(404).json(err);
-                        }
-                        else {
-                            res.status(200).json({ token: user.generateJwt() });
-                        }
-                    }
-                    else {
-                        res.status(401).json(info);
-                    }
-                }
-            });
-        });
         this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const userData = req.body;
+            const user = new User({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                username: req.body.username,
+                email: req.body.email,
+                updatePassword: true,
+            });
+            if (userData.password) {
+                user.setPassword(userData.password);
+                user.save((err) => {
+                    if (err) {
+                        res.status(404).json(err);
+                    }
+                    else {
+                        res.status(200).json({ token: user.generateJwt() });
+                    }
+                });
+            }
+            else {
+                res.json({ status: 'must set a password' });
+            }
         });
     }
 }

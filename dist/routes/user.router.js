@@ -8,8 +8,6 @@ class UserRouter {
         this.init();
     }
     init() {
-        this.router.post('/login', user_controller_1.default.login);
-        this.router.post('/register', user_controller_1.default.register);
         this.router.post('/', user_controller_1.default.createUser);
         this.router.get('/', user_controller_1.default.getUsers);
         this.router.get('/:id', user_controller_1.default.getUserById);
