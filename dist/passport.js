@@ -9,17 +9,23 @@ passport.use(new LocalStrategy({
         if (err) {
             return done(err);
         }
-        if (!user) {
-            return done(null, false, {
-                message: 'User not found',
-            });
+        else {
+            if (!user) {
+                return done(null, false, {
+                    message: 'User not found',
+                });
+            }
+            else {
+                if (!user.validPassword(password)) {
+                    return done(null, false, {
+                        message: 'Password is wrong',
+                    });
+                }
+                else {
+                    return done(null, user);
+                }
+            }
         }
-        if (!user.validPassword(password)) {
-            return done(null, false, {
-                message: 'Password is wrong',
-            });
-        }
-        return done(null, user);
     });
 }));
 //# sourceMappingURL=passport.js.map

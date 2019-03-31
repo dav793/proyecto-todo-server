@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const passport = require("passport");
-const IUserModel = require('../models/user.model');
+const userController = require('../controllers/user.controller');
+const User = require('../models/user.model');
 class IndexRouter {
     constructor() {
         this.router = express_1.Router();
@@ -12,7 +13,7 @@ class IndexRouter {
         this.router.get('/', (req, res) => {
             res.send('Hello World');
         });
-        this.router.post('/login', (req, res) => {
+        this.router.post('/login', (req, res, next) => {
             passport.authenticate('local', (err, user, info) => {
                 if (err) {
                     res.status(404).json(err);
@@ -31,8 +32,9 @@ class IndexRouter {
                         res.status(401).json(info);
                     }
                 }
-            });
+            })(req, res, next);
         });
+        this.router.post('/createUser', userController.createUser);
     }
 }
 exports.IndexRouter = IndexRouter;

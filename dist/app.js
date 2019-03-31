@@ -6,7 +6,6 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const passport = require("passport");
 const index_router_1 = require("./routes/index.router");
-const todo_router_1 = require("./routes/todo.router");
 const user_router_1 = require("./routes/user.router");
 const env = require('../config/environment');
 const logger = require('./winston');
@@ -16,6 +15,7 @@ class App {
         this.database();
         this.middleware();
         this.authentication();
+        console.log('despues de autenticacion ');
         this.routes();
         this.handleErrors();
     }
@@ -62,7 +62,6 @@ class App {
     routes() {
         this.app.use('/', index_router_1.default);
         this.app.use('/users', user_router_1.default);
-        this.app.use('/todo', todo_router_1.default);
         this.app.all('*', (req, res) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
             res.sendStatus(404);

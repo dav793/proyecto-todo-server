@@ -8,73 +8,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const User = require('../models/user.model');
+const User = require('../models/user.model').User;
 class UserController {
     constructor() {
-        this.logger = require('../winston');
         this.createUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const user = new User({
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 username: req.body.username,
                 email: req.body.email,
-                updatePassword: req.body.updatePassword,
+                updatePassword: req.body.updatePassword
             });
-            yield User.save();
-            res.json({
-                status: 'Employee saved!!',
-            });
+            if (req.body.password) {
+                user.setPassword(req.body.password);
+                yield user.save();
+                const token = user.generateJwt();
+                res.json({
+                    'Token': token
+                });
+            }
+            else {
+                res.json({
+                    'status': 'user not saved something, password is missing'
+                });
+            }
         });
         this.getUsers = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const users = yield User.find();
             res.json(users);
         });
-        this.getUserById = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const user = yield User.findById(req.params.id);
-            res.json(user);
-        });
-        this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const user = {
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                username: req.body.username,
-                email: req.body.email,
-                updatePassword: req.body.updatePassword,
-            };
-            yield User.findByIdAndUpdate(id, { $set: user }, { new: true });
-            res.json({ status: 'Employee updated' });
-        });
-        this.deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            yield User.findByIdAndRemove(req.params.id);
-            res.json({ status: 'Employee deleted' });
-        });
-        this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const userData = req.body;
-            const user = new User({
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                username: req.body.username,
-                email: req.body.email,
-                updatePassword: true,
-            });
-            if (userData.password) {
-                user.setPassword(userData.password);
-                user.save((err) => {
-                    if (err) {
-                        res.status(404).json(err);
-                    }
-                    else {
-                        res.status(200).json({ token: user.generateJwt() });
-                    }
-                });
-            }
-            else {
-                res.json({ status: 'must set a password' });
-            }
-        });
     }
 }
 exports.UserController = UserController;
-exports.default = new UserController();
+module.exports = new UserController();
 //# sourceMappingURL=user.controller.js.map

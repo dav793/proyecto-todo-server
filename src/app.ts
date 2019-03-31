@@ -20,6 +20,7 @@ class App {
         this.database();
         this.middleware();
         this.authentication();
+        console.log('despues de autenticacion ')
         this.routes();
         this.handleErrors();
     }
@@ -69,7 +70,7 @@ class App {
     private routes() {
         this.app.use('/', IndexRouter);
         this.app.use('/users', UserRouter);
-        this.app.use('/todo', TodoRouter);
+        //this.app.use('/todo', TodoRouter);
 
         this.app.all('*', (req: any, res: any) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
