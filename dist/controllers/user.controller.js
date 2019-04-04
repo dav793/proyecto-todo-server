@@ -12,30 +12,61 @@ const User = require('../models/user.model').User;
 class UserController {
     constructor() {
         this.createUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const user = new User({
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                username: req.body.username,
-                email: req.body.email,
-                updatePassword: req.body.updatePassword
-            });
-            if (req.body.password) {
-                user.setPassword(req.body.password);
-                yield user.save();
-                const token = user.generateJwt();
+            const user = yield User.findOne({ username: req.body.username });
+            if (user) {
+                console.log(user);
                 res.json({
-                    'Token': token
+                    'status': 'user FOUND, the user will not be created again'
                 });
             }
             else {
-                res.json({
-                    'status': 'user not saved something, password is missing'
+                const user = new User({
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    username: req.body.username,
+                    email: req.body.email,
+                    updatePassword: req.body.updatePassword
                 });
+                if (req.body.password) {
+                    user.setPassword(req.body.password);
+                    yield user.save();
+                    const token = user.generateJwt();
+                    res.json({
+                        'Token': token
+                    });
+                }
+                else {
+                    res.json({
+                        'status': 'user not saved something, password is missing'
+                    });
+                }
             }
         });
         this.getUsers = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const users = yield User.find();
             res.json(users);
+        });
+        this.getUserById = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const user = User.findById(req.params.id);
+            res.json(user);
+        });
+        this.getUserByUsername = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        });
+        this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const employee = {
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                username: req.body.username,
+                email: req.body.email,
+                updatePassword: req.body.updatePassword
+            };
+            yield User.findByIdAndUpdate(id, { $set: employee }, { new: true });
+            res.json({ status: 'User updated' });
+        });
+        this.deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            yield User.findByIdAndRemove(req.params.id);
+            res.json({ status: 'User deleted' });
         });
     }
 }

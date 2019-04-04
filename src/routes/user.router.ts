@@ -11,7 +11,7 @@ export class UserRouter {
 
     public init() {
         this.router.get('/', userController.getUsers);
-        //this.router.get('/:id', userController.getUserById);
+        this.router.get('/:id', userController.getUserById);
         //this.router.put('/:id', userController.updateUser);
         //this.router.delete('/:id', userController.deleteUser);
     }

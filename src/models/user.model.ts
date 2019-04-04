@@ -45,17 +45,17 @@ export let UserSchema = new Schema({
     },
 );
 
-UserSchema.methods.setPassword = (password) => {
+UserSchema.methods.setPassword = function(password) {
     this.salt = cryptoPass.randomBytes(16).toString('hex');
     this.hash = cryptoPass.pbkdf2Sync(password, this.salt, 1000, 64, 'sha1').toString('hex');
 };
 
-UserSchema.methods.validPassword = (password) => {
+UserSchema.methods.validPassword = function(password) {
     const hash = cryptoPass.pbkdf2Sync(password, this.salt, 1000, 64, 'sha1').toString('hex');
     return this.hash === hash;
 };
 
-UserSchema.methods.generateJwt = () => {
+UserSchema.methods.generateJwt = function() {
     const expiry = new Date();
     expiry.setDate(expiry.getDate() + 7);
 

@@ -19,18 +19,16 @@ class IndexRouter {
                     res.status(404).json(err);
                     return;
                 }
-                else {
-                    if (user) {
-                        if (user.deleted) {
-                            res.status(404).json(err);
-                        }
-                        else {
-                            res.status(200).json({ token: user.generateJwt() });
-                        }
+                if (user) {
+                    if (user.deleted) {
+                        res.status(404).json(err);
                     }
                     else {
-                        res.status(401).json(info);
+                        res.status(200).json({ "token": user.generateJwt() });
                     }
+                }
+                else {
+                    res.status(401).json(info);
                 }
             })(req, res, next);
         });
