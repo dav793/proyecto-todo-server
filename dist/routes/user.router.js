@@ -10,6 +10,9 @@ class UserRouter {
     init() {
         this.router.get('/', userController.getUsers);
         this.router.get('/:id', userController.getUserById);
+        this.router.get('/username/:username', userController.getUserByUsername);
+        this.router.put('/:id', userController.updateUser);
+        this.router.delete('/:id', userController.deleteUser);
     }
 }
 exports.UserRouter = UserRouter;

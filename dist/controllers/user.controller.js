@@ -47,21 +47,23 @@ class UserController {
             res.json(users);
         });
         this.getUserById = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const user = User.findById(req.params.id);
+            const user = yield User.findById(req.params.id);
             res.json(user);
         });
         this.getUserByUsername = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const user = yield User.findOne({ "username": req.params.username });
+            res.json(user);
         });
         this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const employee = {
+            const user = {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 username: req.body.username,
                 email: req.body.email,
                 updatePassword: req.body.updatePassword
             };
-            yield User.findByIdAndUpdate(id, { $set: employee }, { new: true });
+            yield User.findByIdAndUpdate(id, { $set: user }, { new: true });
             res.json({ status: 'User updated' });
         });
         this.deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () {

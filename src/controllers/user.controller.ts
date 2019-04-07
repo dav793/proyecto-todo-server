@@ -42,24 +42,25 @@ export class UserController {
         res.json(users);
     }
     public getUserById = async (req, res) => {
-        const user = User.findById(req.params.id);
+        const user = await User.findById(req.params.id);
         res.json(user);
     }
     public getUserByUsername = async (req, res) => {
-
+        const user = await User.findOne({ "username": req.params.username });
+        res.json(user);
     }
 
     // Update
     public updateUser = async (req, res) => {
         const { id } = req.params;
-        const employee = {
+        const user = {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             username: req.body.username,
             email: req.body.email,
             updatePassword: req.body.updatePassword
         }
-        await User.findByIdAndUpdate(id, { $set: employee }, { new: true });
+        await User.findByIdAndUpdate(id, { $set: user }, { new: true });
         res.json({ status: 'User updated' });
     }
 

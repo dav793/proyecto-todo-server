@@ -8,6 +8,7 @@ const env = require('../../config/environment');
 
 export interface IUserModel extends IUser, Document {
     _id: Types.ObjectId;
+    _username: Types.ObjectId;
     hash: String;
     salt: String;
 }
