@@ -1,14 +1,10 @@
-import { read } from "fs";
-
 const User = require('../models/user.model').User;
 
 export class UserController {
     // ...............Create ...............
     public createUser = async (req, res) => {
-
         const user = await User.findOne({ username: req.body.username });
         if (user) {
-            console.log(user);
             res.json({
                 'status': 'user FOUND, the user will not be created again'
             })

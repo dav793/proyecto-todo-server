@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import todoController from '../controllers/todo.controller';
+const todoController = require('../controllers/todo.controller');
 
 export class TodoRouter {
     public router: Router;

@@ -15,7 +15,7 @@ export let TodoSchema: Schema = new Schema({
         default: false,
     },
     userId: {
-        type: Number,
+        type: String,
         required: true,
     },
 }, {

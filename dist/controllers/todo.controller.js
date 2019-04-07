@@ -8,17 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Todo = require('../models/todo.model');
+const Todo = require('../models/todo.model').Todo;
 class TodoController {
     constructor() {
-        this.logger = require('../winston');
         this.createTodo = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const todo = new Todo({
                 body: req.body.body,
                 done: req.body.done,
-                userId: req.body.userId,
+                userId: req.body.userId
             });
-            yield Todo.save();
+            yield todo.save();
             res.json({
                 status: 'Todo saved!!',
             });
@@ -48,5 +47,5 @@ class TodoController {
     }
 }
 exports.TodoController = TodoController;
-exports.default = new TodoController();
+module.exports = new TodoController();
 //# sourceMappingURL=todo.controller.js.map

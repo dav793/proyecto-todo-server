@@ -65,12 +65,13 @@ class App {
         }
         // protect api routes
         this.app.use('/users', authenticate, (req, res, next) => { next(); });
+        this.app.use('/todo', authenticate, (req, res, next) => { next(); });
     }
 
     private routes() {
         this.app.use('/', IndexRouter);
         this.app.use('/users', UserRouter);
-        //this.app.use('/todo', TodoRouter);
+        this.app.use('/todo', TodoRouter);
 
         this.app.all('*', (req: any, res: any) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);

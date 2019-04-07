@@ -14,7 +14,6 @@ class UserController {
         this.createUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const user = yield User.findOne({ username: req.body.username });
             if (user) {
-                console.log(user);
                 res.json({
                     'status': 'user FOUND, the user will not be created again'
                 });

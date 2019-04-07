@@ -11,7 +11,7 @@ exports.TodoSchema = new mongoose_1.Schema({
         default: false,
     },
     userId: {
-        type: Number,
+        type: String,
         required: true,
     },
 }, {

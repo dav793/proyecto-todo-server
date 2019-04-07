@@ -1,16 +1,14 @@
-const Todo = require('../models/todo.model');
+const Todo = require('../models/todo.model').Todo;
 
 export class TodoController {
-    public logger = require('../winston');
-
     // -------------------- CREATE --------------------
     public createTodo = async (req, res) => {
         const todo = new Todo({
             body: req.body.body,
             done: req.body.done,
-            userId: req.body.userId,
+            userId: req.body.userId
         });
-        await Todo.save();
+        await todo.save();
         res.json({
             status: 'Todo saved!!',
         });
@@ -46,4 +44,4 @@ export class TodoController {
     }
 }
 
-export default new TodoController();
+module.exports = new TodoController();
