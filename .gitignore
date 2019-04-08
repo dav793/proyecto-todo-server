@@ -59,3 +59,9 @@ typings/
 
 # next.js build output
 .next
+
+# ignore the dist folder
+dist
+
+# ignore enviroment files
+config/environment.js
