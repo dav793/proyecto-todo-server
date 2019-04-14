@@ -54,6 +54,7 @@ export class IndexRouter {
                 "lastName": "",
                 "username": "",
                 "email": "",
+                "password": "",
                 "updatePassword: true,
             }
         */

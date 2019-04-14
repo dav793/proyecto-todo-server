@@ -53,14 +53,7 @@ export class UserController {
     // Update
     public updateUser = async (req, res) => {
         const { id } = req.params;
-        const user = {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            username: req.body.username,
-            email: req.body.email,
-            updatePassword: req.body.updatePassword
-        }
-        await User.findByIdAndUpdate(id, { $set: user }, { new: true });
+        await User.findByIdAndUpdate(id, { $set: req.body }, { new: true });
         res.json({ status: 'User updated' });
     }
 

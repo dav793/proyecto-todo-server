@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "serve": "tsc && export NODE_ENV=production && nodemon dist/index.js"
+    "start": "tsc && export NODE_ENV=production && nodemon dist/index.js"
   },
   "author": "",
   "license": "ISC",
