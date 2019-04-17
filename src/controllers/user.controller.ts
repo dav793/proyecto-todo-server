@@ -43,24 +43,41 @@ export class UserController {
     }
     public getUserById = async (req, res) => {
         const user = await User.findById(req.params.id);
-        res.json(user);
+        if (user != null) {
+            res.json(user);
+        } else {
+            res.json({ status: 'No User founded' });
+        }
     }
     public getUserByUsername = async (req, res) => {
         const user = await User.findOne({ "username": req.params.username });
-        res.json(user);
+        if (user != null) {
+            res.json(user);
+        } else {
+            res.json({ status: 'No User founded' });
+        }
     }
 
     // Update
     public updateUser = async (req, res) => {
         const { id } = req.params;
-        await User.findByIdAndUpdate(id, { $set: req.body }, { new: true });
-        res.json({ status: 'User updated' });
+        delete req.body.hash;
+        delete req.body.salt;
+        if (await User.findByIdAndUpdate(id, { $set: req.body }, { new: true })) {
+            res.json({ status: 'User updated' });
+        } else {
+            res.json({ status: 'No User updated' });
+        }
+
     }
 
     // Delete
     public deleteUser = async (req, res) => {
-        await User.findByIdAndRemove(req.params.id);
-        res.json({ status: 'User deleted' });
+        if (await User.findByIdAndRemove(req.params.id)) {
+            res.json({ status: 'User deleted' });
+        } else {
+            res.json({ status: 'No User deleted' });
+        }
     }
 }
 
