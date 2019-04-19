@@ -1,7 +1,5 @@
 import { Router } from 'express';
-import userController from '../controllers/user.controller';
-
-const logger = require('../winston');
+const userController = require('../controllers/user.controller');
 
 export class UserRouter {
     public router: Router;
@@ -12,9 +10,9 @@ export class UserRouter {
     }
 
     public init() {
-        this.router.post('/', userController.createUser);
         this.router.get('/', userController.getUsers);
         this.router.get('/:id', userController.getUserById);
+        this.router.get('/byUsername/:username', userController.getUserByUsername);
         this.router.put('/:id', userController.updateUser);
         this.router.delete('/:id', userController.deleteUser);
     }

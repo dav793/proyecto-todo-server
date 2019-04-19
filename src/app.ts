@@ -1,12 +1,15 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
+import * as mongoose from 'mongoose';
+import * as morgan from 'morgan';
+import * as passport from 'passport';
 
+// Route Section
 import IndexRouter from './routes/index.router';
+import TodoRouter from './routes/todo.router';
 import UserRouter from './routes/user.router';
 
-const mongoose = require('mongoose');
-const env = require('../config/environment.template');
-const morgan = require('morgan');
+const env = require('../config/environment');
 const logger = require('./winston');
 
 class App {
@@ -16,6 +19,7 @@ class App {
         this.app = express();
         this.database();
         this.middleware();
+        this.authentication();
         this.routes();
         this.handleErrors();
     }
@@ -31,7 +35,6 @@ class App {
                 url = `mongodb://${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`;
             }
             mongoose.connect(url, { useNewUrlParser: true, useFindAndModify: false });
-            // console.log('url ---> ' + url);
             const db = mongoose.connection;
             db.on('error', () => {
                 console.error.bind(console, 'connection error:');
@@ -48,9 +51,25 @@ class App {
         this.app.use(bodyParser.urlencoded({ extended: false }));
     }
 
+    // User authentication
+    private authentication() {
+        require('./passport');
+        this.app.use(passport.initialize());
+        const expressJwt = require('express-jwt');
+        let authenticate: any;
+        try {
+            authenticate = expressJwt({ secret: env.JWT_SECRET });
+        } catch (err) {
+            console.log(err);
+        }
+        // protect api routes
+        this.app.use('/users', authenticate, (req, res, next) => { next(); });
+    }
+
     private routes() {
         this.app.use('/', IndexRouter);
         this.app.use('/users', UserRouter);
+        //this.app.use('/todo', TodoRouter);
 
         this.app.all('*', (req: any, res: any) => {
             console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
@@ -61,8 +80,8 @@ class App {
     private handleErrors() {
         this.app.use((err, req, res, next) => {
             logger.error(err.stack);
-            if(res.headersSent) {
-                return next(err)
+            if (res.headersSent) {
+                return next(err);
             }
             if (process.env.NODE_ENV === 'production') {
                 res.status(500).send(err.message);
