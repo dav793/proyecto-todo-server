@@ -54,7 +54,8 @@ export class IndexRouter {
                 "lastName": "",
                 "username": "",
                 "email": "",
-                "updatePassword: true,
+                "password": "",
+                "updatePassword": true
             }
         */
         this.router.post('/createUser', userController.createUser);

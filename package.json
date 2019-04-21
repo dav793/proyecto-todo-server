@@ -5,11 +5,12 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "serve": "tsc && export NODE_ENV=production && nodemon dist/index.js"
+    "start": "tsc && cross-env NODE_ENV=production && nodemon dist/index.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "cross-env": "^5.2.0",
     "nodemon": "^1.18.10",
     "tslint": "^5.13.1",
     "typescript": "^3.3.3333"
