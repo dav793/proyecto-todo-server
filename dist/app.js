@@ -16,7 +16,6 @@ class App {
         this.database();
         this.middleware();
         this.authentication();
-        console.log('despues de autenticacion ');
         this.routes();
         this.handleErrors();
     }

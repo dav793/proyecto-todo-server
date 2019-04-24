@@ -47,27 +47,40 @@ class UserController {
         });
         this.getUserById = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const user = yield User.findById(req.params.id);
-            res.json(user);
+            if (user != null) {
+                res.json(user);
+            }
+            else {
+                res.json({ status: 'No User founded' });
+            }
         });
         this.getUserByUsername = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const user = yield User.findOne({ "username": req.params.username });
-            res.json(user);
+            if (user != null) {
+                res.json(user);
+            }
+            else {
+                res.json({ status: 'No User founded' });
+            }
         });
         this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const user = {
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                username: req.body.username,
-                email: req.body.email,
-                updatePassword: req.body.updatePassword
-            };
-            yield User.findByIdAndUpdate(id, { $set: user }, { new: true });
-            res.json({ status: 'User updated' });
+            delete req.body.hash;
+            delete req.body.salt;
+            if (yield User.findByIdAndUpdate(id, { $set: req.body }, { new: true })) {
+                res.json({ status: 'User updated' });
+            }
+            else {
+                res.json({ status: 'No User updated' });
+            }
         });
         this.deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            yield User.findByIdAndRemove(req.params.id);
-            res.json({ status: 'User deleted' });
+            if (yield User.findByIdAndRemove(req.params.id)) {
+                res.json({ status: 'User deleted' });
+            }
+            else {
+                res.json({ status: 'No User deleted' });
+            }
         });
     }
 }
